@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiments | IO</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=IBM+Plex+Mono:wght@100,200,300,400,500,600,700&family=Jacquarda+Bastarda+9&family=Lato:wght@100,300,400,700,900&family=Purple+Purse&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquarda+Bastarda+9&family=Purple+Purse&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Jacquarda+Bastarda+9&family=Purple+Purse&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Jacquarda+Bastarda+9&family=Purple+Purse&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/text.css">
+    <link rel="stylesheet" href="/static/css/multi.css">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+</head>
+<body>
+    <header class="multihead">
+
+        <div class="logo-box">
+                <img src="/static/img/logo-white.png" alt="logo" class="logo" style="visibility: visible;">
+        </div>
+
+        <div class="nav-bar">
+            <ul class="nav">
+                <li><a href="/" class="nav-btn">Home</a></li>
+                <li><a href="/text" class="nav-btn">Text.IO</a></li>
+            </ul>
+        </div>
+        <div class="section-input">
+            <div class="heading-primary-sub">
+                <div class="texthead">Multimodal Analysis </div>
+                <div class="textsubone">Provide your Text here</div>
+            </div>
+<!--            <div class="input-section">-->
+<!--                <input type="text" id="input-text" class="input-text" placeholder="Search Sentiments IO">-->
+<!--            </div>-->
+
+<!--            <div class="textsubone" style="margin-top: 15px; margin-bottom: -15px;">and Image here</div>-->
+
+            <div class="input-section">
+                <textarea type="text" id="input-text" class="input-text" placeholder="Say something..." rows="3"></textarea>
+            </div>
+            <div class="textsubone" style="margin-top: 15px; margin-bottom: -15px;">and Image here</div>
+
+            <form id="uploadForm" class="uploadForm" enctype="multipart/form-data">
+
+                <input type="file" id="uploadInput" accept="image/*">
+                <input type="submit" value="Upload" class="btn btn-white btn-animated">
+            </form>
+
+
+             <section class="img-section">
+                <div class="image-box">
+                    <h2 class="result-heading">Top Image</h2>
+                    <img id="uploadedImage" class="topimage" src="{{ url_for('static', filename='uploaded_image.png') }}" onbeforeinput="this.style.display='none'">
+                </div>
+                <div class="image-desc">
+                    <h2 class="result-heading">Description: <span id="image-description"></span> <span id="text-in-image-value" style="font-size: 17px;"></span></h2>
+                </div>
+            </section>
+            <section class="result-section">
+
+                <div class="sentiment-box">
+                    <h2 class="result-heading">Sentiment</h2>
+
+                    <div class="card" id="emotionData">
+                        <p>Dominant Emotion: <span id="dominant-emotion-value" style="font-style: italic; font-weight: bold"></span></p>
+                        <p>Face Confidence: <span class="emotion-value" id="face-confidence-value" style="font-style: italic; font-weight: bold"></span></p>
+                        <p class="other-emotions">Other Emotions:</p>
+                        <ul style="font-style: italic; font-weight: bold; font-size: 20px; list-style: none; padding-left: 30px;"><li id="otherEmotionsList"></li></ul>
+                    </div>
+                    <p id="sentiment-result" class="result"></p>
+                </div>
+
+                <div class="emotion-box">
+                    <h2 class="result-heading">Emotions</h2>
+                    <span class="faceicon">
+                        <i class="far fa-laugh-wink"></i>
+                    </span>
+                    <span><p id="dominant_emotion" class="result"></p></span>
+                    <div class="otherbox">
+                        <span class="faceicon1">
+                            <i class="far fa-laugh-wink"></i>
+                        </span>
+                        <span class="faceicon2">
+                            <i class="far fa-laugh-wink"></i>
+                        </span>
+                        <span class="faceicon3">
+                            <i class="far fa-laugh-wink"></i>
+                        </span>
+                    </div>
+<!--                    <span><p id="dominant_emotion" class="result"></p></span>-->
+                </div>
+
+            </section>
+
+            <section class="piechart">
+                <h2 class="result-heading">Analysis</h2>
+                <div class="image-region-box">
+                    <span><p class="span-analysis">Image Region: </p><ul style="font-style: italic; font-weight: bold; font-size: 19px; list-style: none; padding-left: 30px;"><li id="regionList"></li></ul></span>
+                    <span><p class="span-analysis">Gender: </p><ul id="genderList" style="font-style: italic; font-weight: bold; font-size: 19px; list-style-type: none; padding-left: 30px;"><li style="list-style: none;"></li></ul></span>
+                </div>
+                <div class="image-region-box-two">
+                    <span><p class="span-analysis">Approximate Race: </p><ul style="font-style: italic; font-weight: bold; font-size: 19px; list-style: none; padding-left: 30px; list-style-type: none;"><li id="raceResults" style="list-style: none;"></li></ul></span>
+                    <span><p class="span-analysis">Estimated Age: </p><span class="age-value" id="age-value" style="font-style: italic; font-weight: bold"></span></span>
+                </div>
+
+            </section>
+        </div>
+    </header>
+    <footer class="section-footer">
+        <p class="footpara">
+            Deciphering sentiments beyond words alone.<br>
+            Redefining sentiment analysis one modality at a time.
+        </p>
+        <p class="footcr">
+            All Rights Reserved © by Sudhanva Bhattar.😁 <br>
+            Built with 💛 under Prof. Hambaba.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+    $(document).ready(function() {
+    $('#uploadForm').submit(function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        const file = $('#uploadInput')[0].files[0]; // Get the uploaded file
+        const text = $('#input-text').val();
+        console.log(text);
+
+        // Display the uploaded image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            $('#uploadedImage').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
+
+        // Create FormData object to send the file via AJAX
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('text', text)
+
+        // AJAX request to send the uploaded image to the server
+        $.ajax({
+            url: '/data',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                // Handle success
+                console.log("data: "+JSON.stringify(data));
+                processData(data[0]);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    // function updateImageDescription(descriptions) {
+    //     // Get the span element by its ID
+    //     var span = document.getElementById("image-description");
+    //
+    //     // Set the text content of the span to the descriptions
+    //     span.textContent = descriptions.join(', '); // Assuming descriptions is an array of strings
+    //
+    //     console.log(descriptions);
+    // }
+    //
+    // // Make an AJAX request to fetch descriptions from the server
+    // fetch('/descriptions')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         // Call the updateImageDescription function with the received descriptions
+    //         updateImageDescription(data.descriptions);
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //     });
+
+
+    function processData(data) {
+
+
+        let descriptions = data['descriptions'];
+        document.getElementById("image-description").innerHTML = descriptions;
+
+        // ------------------ DOMINANT EMOTION ------------------------- //
+
+        let dominant_emotion = data['dominant_emotion'];
+        document.getElementById("dominant-emotion-value").innerHTML = dominant_emotion;
+
+
+        let text_in_image = data['text_in_image'];
+        document.getElementById("text-in-image-value").innerHTML = text_in_image;
+
+        // ------------------ FACE CONFIDENCE ------------------------- //
+
+        let face_confidence = data['face_confidence'];
+        document.getElementById("face-confidence-value").innerHTML = face_confidence;
+
+        document.getElementById("dominant_emotion").innerText = dominant_emotion;
+        // let emotion = JSON.stringify(data['emotion']);
+
+        // ------------------ RACE ------------------------- //
+
+        let raceData = data['race']; // Assuming 'data' contains the race estimation data
+        let dominantRace = data['dominant_race']; // Assuming 'data' contains the dominant race estimation
+
+        let raceList = document.createElement("ul"); // Create a <ul> element to hold the race estimation data
+
+        // Iterate over the race data and create <li> elements for each race
+        for (let race in raceData) {
+            let raceListItem = document.createElement("li");
+            raceListItem.innerText = `${race}: ${raceData[race].toFixed(3)} %`; // Limit to 3 decimal points
+            raceList.appendChild(raceListItem);
+        }
+
+        // Add the dominant race to the list
+        let dominantRaceItem = document.createElement("li");
+        dominantRaceItem.innerText = `Dominant Race: ${dominantRace}`;
+        raceList.appendChild(dominantRaceItem);
+
+        // Append the race list to the desired HTML element
+        document.getElementById("raceResults").appendChild(raceList);
+
+
+
+        // ------------------ AGE ------------------------- //
+
+        let age = data['age'];
+        document.getElementById("age-value").innerHTML = age;
+
+        // ------------------ GENDER ------------------------- //
+
+        let genderData = data['gender']; // Assuming 'data' contains the gender estimation data
+        let genderList = document.createElement("ul"); // Create a <ul> element to hold the gender estimation data
+
+        // Iterate over the gender data and create <li> elements for each gender
+        for (let gender in genderData) {
+            let genderListItem = document.createElement("li");
+            genderListItem.innerText = `${gender}: ${genderData[gender].toFixed(3)} %`;
+            genderList.appendChild(genderListItem);
+        }
+
+        // Append the gender list to the desired HTML element
+        document.getElementById("genderList").appendChild(genderList);
+
+
+
+        // ------------------ OTHER EMOTIONS ------------------------- //
+
+        let emotions = data['emotion'];
+        let otherEmotionsList = document.getElementById("otherEmotionsList");
+        otherEmotionsList.innerHTML = ''; // Clear previous content
+
+        let dominantListItem = document.createElement("li");
+        // dominantListItem.innerText = `Dominant: *${dominant_emotion}* : ${emotions[dominant_emotion].toFixed(3)} %`;
+        // otherEmotionsList.appendChild(dominantListItem);
+
+        for (let emotion in emotions) {
+            // if (emotion !== domintan_emotion.toLowerCase()) {
+                let listItem = document.createElement("li");
+                listItem.innerText = `${emotion}: ${emotions[emotion]}`;
+                otherEmotionsList.appendChild(listItem);
+            // }
+        }
+
+        // let emotions = data['emotion'];
+        // let otherEmotionsList = document.getElementById("otherEmotionsList");
+        // otherEmotionsList.innerHTML = ''; // Clear previous content
+        //
+        // for (let emotion in emotions) {
+        //     let listItem = document.createElement("li");
+        //     listItem.innerText = `${emotion}: ${emotions[emotion].toFixed(3)} %`;
+        //     otherEmotionsList.appendChild(listItem);
+        // }
+
+
+
+        // ------------------ REGION ------------------------- //
+
+        let regionList = document.getElementById("regionList");
+
+        let region = data['region'];
+        for (let key in region) {
+            let listItem = document.createElement("li");
+            switch (key) {
+                case 'x':
+                    listItem.innerText = `Region X: ${region[key]}`;
+                    break;
+                case 'y':
+                    listItem.innerText = `Region Y: ${region[key]}`;
+                    break;
+                case 'w':
+                    listItem.innerText = `Width: ${region[key]} px`;
+                    break;
+                case 'h':
+                    listItem.innerText = `Height: ${region[key]} px`;
+                    break;
+                case 'left_eye':
+                    listItem.innerText = `Left Eye: ${region[key]}`;
+                    break;
+                case 'right_eye':
+                    listItem.innerText = `Right Eye: ${region[key]}`;
+                    break;
+                default:
+                    break;
+            }
+            regionList.appendChild(listItem);
+        }
+
+
+            // ------------------ EMOTION ICONS ------------------------- //
+
+            // Display dominant emotion
+            // Change sentiment box icon based on dominant emotion
+            const sentimentBoxIcon = $('.emotion-box .faceicon i');
+            switch (dominant_emotion.toLowerCase()) {
+                case 'happy':
+                    sentimentBoxIcon.attr('class', 'far fa-laugh');
+                    break;
+                case 'sad':
+                    sentimentBoxIcon.attr('class', 'far fa-sad-tear');
+                    break;
+                case 'angry':
+                    sentimentBoxIcon.attr('class', 'far fa-angry');
+                    break;
+                case 'fear':
+                    sentimentBoxIcon.attr('class', 'far fa-flushed');
+                    break;
+                case 'neutral':
+                    sentimentBoxIcon.attr('class', 'far fa-meh');
+                    break;
+                case 'disgust':
+                    sentimentBoxIcon.attr('class', 'far fa-dizzy');
+                    break;
+                case 'surprise':
+                    sentimentBoxIcon.attr('class', 'far fa-surprise');
+                    break;
+                // Add cases for other emotions as needed
+                default:
+                    // Default icon for unknown emotions
+                    sentimentBoxIcon.attr('class', 'far fa-meh-blank');
+                    break;
+            }
+            let i=1;
+            for (let emotion in emotions)
+            {
+                const sentimentBoxIcon = $(`.emotion-box .faceicon${i} i`);
+                switch (emotion.toLowerCase()) {
+                    case 'happy':
+                        sentimentBoxIcon.attr('class', 'far fa-laugh');
+                        break;
+                    case 'sad':
+                        sentimentBoxIcon.attr('class', 'far fa-sad-tear');
+                        break;
+                    case 'angry':
+                        sentimentBoxIcon.attr('class', 'far fa-angry');
+                        break;
+                    case 'fear':
+                        sentimentBoxIcon.attr('class', 'far fa-flushed');
+                        break;
+                    case 'neutral':
+                        sentimentBoxIcon.attr('class', 'far fa-meh');
+                        break;
+                    case 'disgust':
+                        sentimentBoxIcon.attr('class', 'far fa-dizzy');
+                        break;
+                    case 'surprise':
+                        sentimentBoxIcon.attr('class', 'far fa-surprise');
+                        break;
+                    // Add cases for other emotions as needed
+                    default:
+                        // Default icon for unknown emotions
+                        sentimentBoxIcon.attr('class', 'far fa-meh-blank');
+                        break;
+                }
+                i++;
+            }
+
+
+    }
+
+});
+    </script>

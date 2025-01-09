@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquarda+Bastarda+9&family=Purple+Purse&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Jacquarda+Bastarda+9&family=Purple+Purse&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Jacquarda+Bastarda+9&family=Purple+Purse&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/icon-font.css">
+    <link rel="stylesheet" href="/static/css/text.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+
+    <script src="https://kit.fontawesome.com/30b6e1d031.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>Sentiments | IO</title>
+</head>
+<body>
+    <header class="head">
+
+            <div class="logo-box">
+                <img src="/static/img/logo-white.png" alt="logo" class="logo">
+            </div>
+
+            <div class="nav-bar">
+                <ul class="nav">
+                    <li> <a href="/" class="nav-btn"> Home </a></li>
+                    <li> <a href="/multi" class="nav-btn"> Modal.IO </a></li>
+                </ul>
+            </div>
+
+            <div class="section-input">
+
+                <span class="heading-primary-sub">
+                    <div class="texthead"> Analyse your own texts </div>
+                </span>
+
+                <span class="heading-primary-sub">
+                    <div class="textsub">based on our meticulously trained ML model</div>
+                </span>
+
+                <form action="/analyze_text" method="post" id="uploadForm" class="uploadForm" enctype="multipart/form-data">
+                   <div class="input-section">
+                    <input type="text" id="text" name="text" class="input-text" placeholder="Please enter your text here">
+                   </div>
+                    <div class="butt">
+                    <input type="submit" value="Go!" class="btn btn-white btn-animated">
+                    </div>
+                </form>
+
+
+<!--                <div class="input-section">-->
+<!--                    <input type="text" id="input-text" class="input-text" placeholder="Please enter your text here">-->
+<!--                    <button id="analyze-btn" class="btn btn-white btn-animated">Go!</button>-->
+<!--                </div>-->
+
+<!--                <div class="butt">-->
+<!--                <a href="#" id="analyze-btn" class="btn btn-white btn-animated">Go!</a>-->
+<!--                </div>-->
+
+                <div class="result-section">
+
+                    <div class="sentiment-box">
+                        <h2 class="result-heading">Sentiment</h2>
+                        <p id="sentiment-result-one" class="result"></p>
+                        <span style="font-size: 20px; font-weight: bold; margin-top: 40px; color: #1e1e1e;">Score: <p id="sentiment-result-two" class="result"></p></span>
+                    </div>
+
+                    <div class="emotion-box">
+                        <h2 class="result-heading">Emotion</h2>
+                        <span class="faceicon">
+                            <i class="fa-regular fa-face-laugh-wink"></i>
+                        </span>
+                        <span><p id="emotion-result" class="result">~ Hello ~</p></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+    </header>
+
+    <!-- ---------------------------------FOOTER SECTION-------------------------------- -->
+
+    <section class="section-footer">
+
+        <span class="foot">
+        <p class="footpara">
+
+            Deciphering sentiments beyond words alone.<br>
+            Redefining sentiment analysis one modality at a time.
+
+        </p>
+        <p class="footcr">
+            All Rights Reserved © by Sudhanva Bhattar.😁 <br>
+            Built with 💛 under Prof. Hambaba.
+        </p>
+        </span>
+    </section>
+
+
+    <!------------------------------------    SCRIPTS   --------------------------------->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+         document.getElementById("uploadForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission
+        var text = document.getElementById("text").value;
+        analyzeText(text);
+    });
+
+    function analyzeText(text) {
+        fetch('/analyze_text', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'text=' + encodeURIComponent(text)
+        })
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function displayResults(data) {
+        document.getElementById("sentiment-result-one").innerText = data.label;
+        document.getElementById("sentiment-result-two").innerText = data.score.toFixed(2);
+        document.getElementById("emotion-result").innerText = data.label; // Assuming you want to display the score rounded to 2 decimal places
+        // Update emotion icon based on the emotion
+        var globalLabelData = data.label;
+        // updateEmotionIcon(data.label);
+        //updateEmotionIcon();
+
+        const sentimentBoxIcon = $('.emotion-box .faceicon i');
+   // var iconElement = document.getElementById("emotion-icon");
+    var emotion = globalLabelData.toLowerCase();
+    switch (emotion.toLowerCase()) {
+        case "love":
+            sentimentBoxIcon.attr('class', 'far fa-heart');
+            break;
+        case "approval":
+            sentimentBoxIcon.attr('class', 'far fa-thumbs-up');
+            break;
+        case "disgust":
+            sentimentBoxIcon.attr('class', 'far fa-grimace');
+            break;
+        case "neutral":
+            sentimentBoxIcon.attr('class', 'far fa-meh');
+            break;
+        case "admiration":
+            sentimentBoxIcon.attr('class', 'far fa-star');
+            break;
+        case "caring":
+            sentimentBoxIcon.attr('class', 'far fa-hand-holding-heart');
+            break;
+        case "remorse":
+            sentimentBoxIcon.attr('class', 'farr fa-frown');
+            break;
+        case "joy":
+            sentimentBoxIcon.attr('class', 'far fa-laugh');
+            break;
+        case "optimism":
+            sentimentBoxIcon.attr('class', 'far fa-smile');
+            break;
+        case "curiosity":
+            sentimentBoxIcon.attr('class', 'far fa-question');
+            break;
+        case "confusion":
+            sentimentBoxIcon.attr('class', 'far fa-question-circle');
+            break;
+        case "nervousness":
+            sentimentBoxIcon.attr('class', 'far fa-user-secret');
+            break;
+        case "relief":
+            sentimentBoxIcon.attr('class', 'far fa-snowflake');
+            break;
+        case "sadness":
+            sentimentBoxIcon.attr('class', 'far fa-sad-tear');
+            break;
+        case "amusement":
+            sentimentBoxIcon.attr('class', 'far fa-grin-squint-tears');
+            break;
+        case "fear":
+            sentimentBoxIcon.attr('class', 'far fa-surprise');
+            break;
+        case "realization":
+            sentimentBoxIcon.attr('class', 'far fa-lightbulb');
+            break;
+        case "anger":
+            sentimentBoxIcon.attr('class', 'far fa-angry');
+            break;
+        case "desire":
+            sentimentBoxIcon.attr('class', 'far fa-heartbeat');
+            break;
+        case "embarrassment":
+            sentimentBoxIcon.attr('class', 'far fa-flushed');
+            break;
+        case "excitement":
+            sentimentBoxIcon.attr('class', 'far fa-star-half-alt');
+            break;
+        case "disappointment":
+            sentimentBoxIcon.attr('class', 'far fa-frown-open');
+            break;
+        case "annoyance":
+            sentimentBoxIcon.attr('class', 'far fa-angry');
+            break;
+        case "pride":
+            sentimentBoxIcon.attr('class', 'far fa-trophy');
+            break;
+        case "disapproval":
+            sentimentBoxIcon.attr('class', 'far fa-thumbs-down');
+            break;
+        case "gratitude":
+            sentimentBoxIcon.attr('class', 'far fa-hands-helping');
+            break;
+        case "surprise":
+            sentimentBoxIcon.attr('class', 'far fa-surprise');
+            break;
+        case "grief":
+            sentimentBoxIcon.attr('class', 'far fa-grin-beam-sweat');
+            break;
+        default:
+            sentimentBoxIcon.attr('class', 'far fa-question-circle');
+
+    }
+}
+    // function updateEmotionIcon(emotion) {
+    //     var iconElement = document.getElementById("emotion-icon");
+    //     switch (emotion.toLowerCase()) {
+    //         case "happy":
+    //             iconElement.classList = "fa-regular fa-face-laugh-wink";
+    //             break;
+    //         case "sad":
+    //             iconElement.classList = "fa-regular fa-face-cry";
+    //             break;
+    //         // Add more cases for different emotions and corresponding icons
+    //         default:
+    //             iconElement.classList = "fa-regular fa-face-laugh-wink";
+    //     }
+    // }
+
+    </script>
+
+    
+</body>
+</html>

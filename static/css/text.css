@@ -1,0 +1,173 @@
+
+.head {
+    height: 150vh;
+    background-color: #7ed56f;
+    background-size: cover;
+    background-position: right;
+    background-attachment: fixed;
+    position: relative;
+
+    clip-path: polygon(0 0, 100% 0, 100% 125vh, 0 100%);
+
+}
+
+/* Navigation bar styles */
+.nav-bar {
+    /* display:block; */
+    float: right;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+}
+
+.nav li{
+    list-style-type: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    padding-right: 20px;
+    margin-top: 0px;
+    text-transform: uppercase;
+    margin-right: 15px;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: #fff;
+}
+
+.nav-btn:hover {
+    color: rgba(30, 33, 37);
+}
+
+.section-input {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+    width: 60rem;
+    
+}
+
+.texthead {
+    
+    color: rgba(30, 33, 37);
+    text-align: center;
+    font-size: 50px;
+    font-weight: 700;
+    font-family: "Lato", sans-serif;
+}
+
+.textsub {
+    color: rgba(30, 33, 37);
+    text-align: center;
+    font-size: 40px;
+    font-weight: 900;
+    font-family: "Dawning of a New Day", cursive;
+}
+
+/* Input section styles */
+.input-section {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.input-text {
+    padding: 10px 20px;
+    margin-right: 10px;
+    /* border: 2px solid #ffffff; */
+    border-style: none;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 70%;
+    height: 2.8rem;
+    border-radius: 25px;
+    background-color: #ffffff;
+    font-size: 20px;
+}
+
+.butt {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Result section styles */
+.result-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+   
+}
+
+.sentiment-box,
+.emotion-box {
+    flex: 1;
+    padding: 20px;
+    margin: 0 10px;
+    /* border: 1px solid rgb(30, 33, 37); */
+    border-radius: 40px;
+    height: 370px;
+    align-items: center;
+}
+
+.sentiment-box {
+    background-color: hsl(1, 55%, 82%) ;
+}
+
+.emotion-box {
+    background-color: hsla(172, 45%, 75%, 1);
+}
+
+.result-heading {
+    font-size: 24px;
+    /* margin-bottom: 10px; */
+    color: rgb(30, 33, 37);
+}
+
+#emotion-result {
+    margin-top: -22%;
+    text-align: center;
+}
+
+.result {
+    font-size: 2.3rem;
+    font-weight: 500;
+    font-family: "Purple Purse", serif;
+    color: rgb(30, 33, 37);
+    text-align: left;
+}
+
+
+/* --------------------------------  ICONS  ----------------------------- */
+
+.faceicon {
+    position: relative;
+    text-align: center;
+    left: 28%;
+    bottom: 15%;
+    color: rgb(17, 41, 21);
+    font-size: 12em;
+}
+
+
+/* --------------===========------------------  MULTIMODAL CSS  ---------------===========-------------- */
+
+.uploadForm input[type="submit"]{
+
+    text-transform: uppercase;
+    font-size: 15px;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #1e1e1e;
+    border: none;
+    border-radius: 20px; /* Rounded borders */
+    transition: all .2s;
+    width: 100px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    margin: 10px; /* Adjust margin as needed */
+    cursor: pointer;
+}
